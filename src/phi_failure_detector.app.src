@@ -1,0 +1,16 @@
+{application, phi_failure_detector,
+ [{description, "Phi Accrual Failure Detection"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { pfd_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    gproc
+   ]},
+  {env,[]},
+  {modules, []},
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.
