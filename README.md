@@ -1,5 +1,7 @@
 # Phi Failure Detector
 
+[![Build Status](https://travis-ci.org/ctbarbour/phi_failure_detector.svg?branch=master)](https://travis-ci.org/ctbarbour/phi_failure_detector)
+
 An Erlang implementation of the ["The Phi Accrual Failure Detector" (Hayashibara, et al., 2004)](http://fubica.lsd.ufcg.edu.br/hp/cursos/cfsc/papers/hayashibara04theaccrual.pdf). This implementation is based on the implementation in [Akka](https://github.com/akka/akka/blob/master/akka-remote/src/main/scala/akka/remote/PhiAccrualFailureDetector.scala) and [Cassandra](https://github.com/apache/cassandra/blob/trunk/src/java/org/apache/cassandra/gms/FailureDetector.java).
 
 ## Quick Start
