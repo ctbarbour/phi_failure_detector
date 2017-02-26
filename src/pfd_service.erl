@@ -3,8 +3,8 @@
 
 -export([start_link/2]).
 -export([start_link/3]).
--export([heartbeat/2]).
--export([phi/2]).
+-export([heartbeat/3]).
+-export([phi/3]).
 -export([select/1]).
 
 -export([init/1]).
@@ -36,27 +36,27 @@ start_link(Label, ID) ->
 start_link(Label, ID, Opts) ->
     gen_server:start_link(?MODULE, [Label, ID, Opts], []).
 
-heartbeat(Label, ID) ->
+heartbeat(Label, ID, T) ->
     Pid = gproc:lookup_pid(key(Label, ID)),
-    gen_server:cast(Pid, heartbeat).
+    gen_server:cast(Pid, {heartbeat, T}).
 
-phi(Label, ID) ->
-    Pid = (gproc:lookup_pid(key(Label, ID))),
-    gen_server:call(Pid, phi).
+phi(Label, ID, T) ->
+    Pid = gproc:lookup_pid(key(Label, ID)),
+    gen_server:call(Pid, {phi, T}).
 
 init([Label, ID, _Opts]) ->
     true = gproc:reg(key(Label, ID)),
     Pfd = pfd_samples:new(),
     {ok, #state{label = Label, pfd = Pfd}}.
 
-handle_call(phi, _From, State) ->
+handle_call({phi, T}, _From, State) ->
     #state{pfd = Pfd} = State,
-    {reply, pfd_samples:phi(Pfd), State};
+    {reply, pfd_samples:phi(T, Pfd), State};
 handle_call(_Msg, _From, State) ->
     {noreply, State}.
 
-handle_cast(heartbeat, State) ->
-    Pfd = pfd_samples:add(State#state.pfd),
+handle_cast({heartbeat, T}, State) ->
+    Pfd = pfd_samples:add(T, State#state.pfd),
     {noreply, State#state{pfd = Pfd}};
 handle_cast(_Msg, State) ->
     {noreply, State}.

@@ -5,7 +5,14 @@
 
 -compile(export_all).
 
--record(state, {t :: pos_integer()}).
+-define(label, test).
+-define(id, {127,0,0,1}).
+
+-record(state, {
+          t_last   :: pos_integer(),
+          phi_last :: float(),
+          rand     :: pid()
+         }).
 
 heartbeat_test_() ->
     {timeout, 60,
@@ -14,9 +21,10 @@ heartbeat_test_() ->
 prop_alive() ->
     ?SETUP(
        fun() ->
-               {ok, Pid} = gen_server:start_link({local, ?MODULE}, ?MODULE, [], []),
+               {ok, _} = application:ensure_all_started(phi_failure_detector),
+               {ok, _Pid} = phi_failure_detector:new(?label, ?id),
                fun() ->
-                       ok = gen_server:stop(Pid)
+                       application:stop(phi_failure_detector)
                end
        end,
        ?FORALL(Cmds, commands(?MODULE),
@@ -27,49 +35,40 @@ prop_alive() ->
                       aggregate(command_names(Cmds), R =:= ok))
                end)).
 
-g_time(#state{t = Last}) ->
-    ?LET(T, pos_integer(), Last + T).
+g_time(#state{t_last = Last, rand = Rand}) ->
+    ?LET(T, ?SUCHTHAT(X, ?LAZY(box_muller:rand(Rand)), X > 0), Last + T).
 
 initial_state() ->
-    #state{t = erlang:system_time(milli_seconds)}.
+    {ok, Pid} = box_muller:start_link(50, 10),
+    #state{rand = Pid, t_last = 0.0, phi_last = 0.0}.
 
 command(S) ->
-    oneof([
-           {call, ?MODULE, add, [g_time(S)]},
-           {call, ?MODULE, phi, [g_time(S)]}
-          ]).
+    frequency([
+               {3, {call, ?MODULE, heartbeat, [g_time(S)]}},
+               {1, {call, ?MODULE, phi, [g_time(S)]}}
+              ]).
 
-precondition(_Cmd, _S) ->
+precondition(#state{t_last = L}, {call, _, heartbeat, [T]}) when T > L ->
+    true;
+precondition(_S, {call, _, heartbeat, _}) ->
+    false;
+precondition(#state{t_last = L}, {call, _, phi, [T]}) when T > L ->
+    true;
+precondition(_S, {call, _, phi, _}) ->
+    false.
+
+postcondition(_S, {call, _, phi, _}, _R) ->
+    true;
+postcondition(_S, {call, _, heartbeat, _}, _R) ->
     true.
 
-postcondition(_S, _Cmd, _R) ->
-    true.
+next_state(S, _V, {call, _, heartbeat, [T]}) ->
+    S#state{t_last = T};
+next_state(S, V, {call, _, phi, _}) ->
+    S#state{phi_last = V}.
 
-next_state(S, _V, {call, ?MODULE, add, [T]}) ->
-    S#state{t = T};
-next_state(S, _V, {call, ?MODULE, phi, _}) ->
-    S.
-
-add(T) ->
-    gen_server:cast(?MODULE, {add, T}).
+heartbeat(T) ->
+    phi_failure_detector:heartbeat(?label, ?id, T).
 
 phi(T) ->
-    gen_server:call(?MODULE, {phi, T}).
-
-init([]) ->
-    {ok, pfd_samples:new()}.
-
-handle_call({phi, T}, _From, State) ->
-    {reply, pfd_samples:phi(T, State), State}.
-
-handle_cast({add, T}, State) ->
-    {noreply, pfd_samples:add(T, State)}.
-
-handle_info(_Info, State) ->
-    {noreply, State}.
-
-code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
-
-terminate(_Reason, _State) ->
-    ok.
+    phi_failure_detector:phi(?label, ?id, T).

@@ -72,7 +72,7 @@ code_change(_OldVsn, State, _Extra) ->
 tick(#state{monitors = []} = State) ->
     send_tick(State);
 tick(State) ->
-    Phi = pfd_service:phi(State#state.label, State#state.id),
+    Phi = pfd_service:phi(State#state.label, State#state.id, erlang:system_time(micro_seconds)),
     send_tick(notify(Phi, State)).
 
 send_tick(State) ->

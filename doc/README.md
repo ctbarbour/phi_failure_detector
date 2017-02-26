@@ -88,11 +88,11 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/ctbarb
 
 
 <table width="100%" border="0" summary="list of modules">
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_app.md" class="module">pfd_app</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_monitor.md" class="module">pfd_monitor</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_samples.md" class="module">pfd_samples</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_service.md" class="module">pfd_service</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_service_sup.md" class="module">pfd_service_sup</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_sup.md" class="module">pfd_sup</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/phi_failure_detector.md" class="module">phi_failure_detector</a></td></tr></table>
+<tr><td><a href="pfd_app.md" class="module">pfd_app</a></td></tr>
+<tr><td><a href="pfd_monitor.md" class="module">pfd_monitor</a></td></tr>
+<tr><td><a href="pfd_samples.md" class="module">pfd_samples</a></td></tr>
+<tr><td><a href="pfd_service.md" class="module">pfd_service</a></td></tr>
+<tr><td><a href="pfd_service_sup.md" class="module">pfd_service_sup</a></td></tr>
+<tr><td><a href="pfd_sup.md" class="module">pfd_sup</a></td></tr>
+<tr><td><a href="phi_failure_detector.md" class="module">phi_failure_detector</a></td></tr></table>
 

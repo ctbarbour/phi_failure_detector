@@ -1,10 +1,8 @@
+@author Tucker Barbour <tucker.barbour@gmail.com>
+@title Phi Accrual Failure Detector
+@copyright 2017 Tucker Barbour
 
-
-# Phi Accrual Failure Detector #
-
-Copyright (c) 2017 Tucker Barbour
-
-__Authors:__ Tucker Barbour ([`tucker.barbour@gmail.com`](mailto:tucker.barbour@gmail.com)).
+@doc
 
 # Phi Accrual Failure Detector
 
@@ -14,55 +12,43 @@ An Erlang implementation of the ["The Phi Accrual Failure Detector" (Hayashibara
 
 ## Quick Start
 
-Add to a rebar3 project via `rebar.conf`
+Add to a rebar3 project via `rebar.conf'
 
-```erlang
-
+<pre lang="erlang">
 {deps, [{phi_failure_detector, {git, "https://github.com/ctbarbour/phi_failure_detector.git", {branch, master}}}]}
+</pre>
 
-```
+Add to a erlang.mk project via `Makefile'
 
-Add to a erlang.mk project via `Makefile`
-
-```make
-
+<pre lang="make">
 DEPS = phi_failure_detector
 dep_phi_failure_detector = git https://github.com/ctbarbour/phi_failure_detector.git master
+</pre>
 
-```
+To start detecting failures for a service endpoint, start the OTP application and start a new failure detector with a service label and identifier. In this case our service label is `http' and our identifier is `{192,168,10,1}'.
 
-To start detecting failures for a service endpoint, start the OTP application and start a new failure detector with a service label and identifier. In this case our service label is `http` and our identifier is `{192,168,10,1}`.
-
-```erlang
-
+<pre lang="erlang">
 application:ensure_all_started(phi_failure_detector),
 phi_failure_detector:new(http, {192,168,10,1})
-
-```
+</pre>
 
 Start adding samples to the failure detector when you get a successful heartbeat from the service endpoint.
 
-```erlang
-
+<pre lang="erlang">
 phi_failure_detector:heartbeat(http, {192,168,10,1}).
-
-```
+</pre>
 
 Check the φ value of the service.
 
-```erlang
-
+<pre lang="erlang">
 phi_failure_detector:phi(http, {192,168,10,1}).
-
-```
+</pre>
 
 Get the φ of all endpoints with the same service label.
 
-```erlang
-
+<pre lang="erlang">
 phi_failure_detector:phi(http).
-
-```
+</pre>
 
 ## Description
 
@@ -72,27 +58,11 @@ To dynamically scale the suspicion level of an endpoint the Phi Accrual Failure 
 
 ## Build and Test
 
-```shell
-
+<pre lang="shell">
 $ rebar3 do xref, dialyzer
 $ rebar3 eunit
-
-```
+</pre>
 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ctbarbour/phi_failure_detector.
-
-
-## Modules ##
-
-
-<table width="100%" border="0" summary="list of modules">
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_app.md" class="module">pfd_app</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_monitor.md" class="module">pfd_monitor</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_samples.md" class="module">pfd_samples</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_service.md" class="module">pfd_service</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_service_sup.md" class="module">pfd_service_sup</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/pfd_sup.md" class="module">pfd_sup</a></td></tr>
-<tr><td><a href="https://github.com/ctbarbour/phi_failure_detector/blob/master/doc/phi_failure_detector.md" class="module">phi_failure_detector</a></td></tr></table>
-

@@ -1,0 +1,4 @@
+%% encoding: UTF-8
+{application,phi_failure_detector}.
+{modules,[pfd_app,pfd_monitor,pfd_samples,pfd_service,pfd_service_sup,pfd_sup,
+          phi_failure_detector]}.
